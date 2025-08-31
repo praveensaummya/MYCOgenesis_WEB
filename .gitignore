@@ -68,3 +68,6 @@ credentials/
 *.temp
 .temp/
 .vercel
+
+node_modules/
+dist/
