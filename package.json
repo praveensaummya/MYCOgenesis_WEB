@@ -1,0 +1,16 @@
+{
+  "name": "mycogenesis-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "myco-react-app",
+    "studio-mycogen"
+  ],
+  "scripts": {
+    "dev:react": "npm run dev --workspace=myco-react-app",
+    "dev:studio": "npm run dev --workspace=studio-mycogen",
+    "build:react": "npm run build --workspace=myco-react-app",
+    "build:studio": "npm run build --workspace=studio-mycogen",
+    "deploy:studio": "npm run deploy --workspace=studio-mycogen"
+  }
+}
