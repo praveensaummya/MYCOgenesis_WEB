@@ -1,6 +1,6 @@
 
 // myco-react-app/src/app/careers/page.tsx
-import { sanityClient } from '../../lib/sanity';
+import { sanityClient, isSanityConfigured } from '../../lib/sanity';
 import { Career } from '../../types/sanity';
 import { Metadata } from 'next';
 
@@ -10,8 +10,18 @@ export const metadata: Metadata = {
 };
 
 async function getCareers(): Promise<Career[]> {
-    const careers = await sanityClient.fetch(`*[_type == "career"]|order(title asc)`);
-    return careers;
+    if (!isSanityConfigured || !sanityClient) {
+        console.warn('Sanity not configured, returning empty careers array');
+        return [];
+    }
+
+    try {
+        const careers = await sanityClient.fetch(`*[_type == "career"]|order(title asc)`);
+        return careers;
+    } catch (error) {
+        console.error('Error fetching careers from Sanity:', error);
+        return [];
+    }
 }
 
 export default async function CareersPage() {

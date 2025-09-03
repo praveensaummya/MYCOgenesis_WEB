@@ -1,6 +1,6 @@
 
 // myco-react-app/src/app/products/[slug]/page.tsx
-import { sanityClient, urlFor } from '../../../lib/sanity';
+import { sanityClient, urlFor, isSanityConfigured } from '../../../lib/sanity';
 import { Product } from '../../../types/sanity';
 import { PortableText } from '@portabletext/react';
 import { Metadata } from 'next';
@@ -13,21 +13,31 @@ interface ProductPageProps {
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
-  const product = await sanityClient.fetch(
-    `*[_type == "product" && slug.current == $slug][0]{
-      _id,
-      name,
-      slug,
-      description,
-      "mainImage": images[0]{
-        asset->{
-          ...
+  if (!isSanityConfigured || !sanityClient) {
+    console.warn('Sanity not configured, returning null for product');
+    return null;
+  }
+
+  try {
+    const product = await sanityClient.fetch(
+      `*[_type == "product" && slug.current == $slug][0]{
+        _id,
+        name,
+        slug,
+        description,
+        "mainImage": images[0]{
+          asset->{
+            ...
+          }
         }
-      }
-    }`,
-    { slug }
-  );
-  return product;
+      }`,
+      { slug }
+    );
+    return product;
+  } catch (error) {
+    console.error('Error fetching product from Sanity:', error);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -54,7 +64,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           
           <div>
-            {product.mainImage && (
+            {product.mainImage && isSanityConfigured && (
                  <Image
                     src={urlFor(product.mainImage).width(600).height(600).url()}
                     alt={product.name || 'Product image'}

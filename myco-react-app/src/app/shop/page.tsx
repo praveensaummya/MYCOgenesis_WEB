@@ -1,6 +1,6 @@
 
 // myco-react-app/src/app/shop/page.tsx
-import { sanityClient } from '../../lib/sanity';
+import { sanityClient, isSanityConfigured } from '../../lib/sanity';
 import { Product } from '../../hooks/useProductCatalog';
 import ProductPreview from '../../components/ProductPreview';
 import { Metadata } from 'next';
@@ -11,25 +11,35 @@ export const metadata: Metadata = {
 };
 
 async function getProducts(): Promise<Product[]> {
-  const products = await sanityClient.fetch(
-    `*[_type == "product" && defined(slug.current)] | order(sortOrder asc) {
-      _id,
-      name,
-      slug,
-      shortDescription,
-      images,
-      category->{
-        _ref,
-        _type,
+  if (!isSanityConfigured || !sanityClient) {
+    console.warn('Sanity not configured, returning empty products array');
+    return [];
+  }
+
+  try {
+    const products = await sanityClient.fetch(
+      `*[_type == "product" && defined(slug.current)] | order(sortOrder asc) {
+        _id,
         name,
-        slug
-      },
-      availability,
-      isFeatured,
-      sortOrder
-    }`
-  );
-  return products;
+        slug,
+        shortDescription,
+        images,
+        category->{
+          _ref,
+          _type,
+          name,
+          slug
+        },
+        availability,
+        isFeatured,
+        sortOrder
+      }`
+    );
+    return products;
+  } catch (error) {
+    console.error('Error fetching products from Sanity:', error);
+    return [];
+  }
 }
 
 export default async function ShopPage() {

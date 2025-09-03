@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { sanityClient } from '../lib/sanity'; // Import from the lib directory
+import { sanityClient, isSanityConfigured } from '../lib/sanity'; // Import from the lib directory
 interface SanityData<T> {
   data: T | null;
   loading: boolean;
@@ -40,6 +40,13 @@ function useSanityData<T>(query: string, params: Record<string, unknown> = {}): 
       }
 
       try {
+        if (!isSanityConfigured || !sanityClient) {
+          console.warn('Sanity not configured, returning null for data');
+          setData(null);
+          setLoading(false);
+          return;
+        }
+
         const result = await sanityClient.fetch<T>(query, params);
         setData(result);
         cache.set(cacheKey, result); // Store in cache

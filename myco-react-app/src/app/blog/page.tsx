@@ -1,22 +1,32 @@
 
-import { sanityClient } from '../../lib/sanity';
+import { sanityClient, isSanityConfigured } from '../../lib/sanity';
 import { Post } from '../../types/sanity';
 import BlogPostPreview from '../../components/BlogPostPreview';
 
 async function getPosts(): Promise<Post[]> {
-    const posts = await sanityClient.fetch(
-        `*[_type == "post"] | order(publishedAt desc){
-            _id,
-            title,
-            slug,
-            publishedAt,
-            featuredImage,
-            excerpt,
-            author->{name, image},
-            "category": categories[0]->{title, slug}
-        }`
-    );
-    return posts;
+    if (!isSanityConfigured || !sanityClient) {
+        console.warn('Sanity not configured, returning empty posts array');
+        return [];
+    }
+
+    try {
+        const posts = await sanityClient.fetch(
+            `*[_type == "post"] | order(publishedAt desc){
+                _id,
+                title,
+                slug,
+                publishedAt,
+                featuredImage,
+                excerpt,
+                author->{name, image},
+                "category": categories[0]->{title, slug}
+            }`
+        );
+        return posts;
+    } catch (error) {
+        console.error('Error fetching posts from Sanity:', error);
+        return [];
+    }
 }
 
 export default async function BlogPage() {
