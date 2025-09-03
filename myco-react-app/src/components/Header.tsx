@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '../contexts/AuthContext';
 
 function Header() {
+  const { currentUser, userProfile, logout, loading } = useAuth();
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
       <nav className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
@@ -43,12 +47,47 @@ function Header() {
 
         {/* Authentication Section */}
         <div className="hidden lg:flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
-          <Link href="/auth/login" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-50/50 transition-all duration-200">
-            Login
-          </Link>
-          <Link href="/auth/signup" className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md">
-            Sign Up
-          </Link>
+          {loading ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-teal-600"></div>
+          ) : currentUser ? (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                {userProfile?.profile?.photoURL ? (
+                  <Image
+                    src={userProfile.profile.photoURL}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full h-8 w-8"
+                  />
+                ) : (
+                  <div className="h-8 w-8 rounded-full bg-teal-100 flex items-center justify-center">
+                    <span className="text-sm font-medium text-teal-600">
+                      {userProfile?.profile?.displayName?.charAt(0)?.toUpperCase() || currentUser.email?.charAt(0)?.toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <span className="text-sm font-medium text-slate-700">
+                  {userProfile?.profile?.displayName || currentUser.email}
+                </span>
+              </div>
+              <button
+                onClick={logout}
+                className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-50/50 transition-all duration-200"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link href="/auth/login" className="text-slate-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-teal-50/50 transition-all duration-200">
+                Login
+              </Link>
+              <Link href="/auth/signup" className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

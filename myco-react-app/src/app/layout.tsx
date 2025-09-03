@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MYCOgenesis - Cultivating Tomorrow's Flavors, Today",
-  description: "Sustainable mushroom farming with IoT integration and professional content management. Premium quality mushrooms grown with cutting-edge technology.",
+  title: "MYCOGEN - Cultivating Tomorrow's Flavors, Today",
+  description: "Sustainable mushroom farming with IoT integration . Premium quality mushrooms grown with cutting-edge technology.",
 };
 
 export default function RootLayout({
@@ -22,13 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} antialiased bg-stone-50 text-slate-800`}
         style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
