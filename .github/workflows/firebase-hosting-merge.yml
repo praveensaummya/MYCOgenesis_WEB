@@ -19,7 +19,11 @@ jobs:
       - name: Deploy Firestore Rules
         run: firebase deploy --only firestore:rules --project mycogen-57ade
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/firebase-service-account.json
+      - name: Create Service Account Key
+        run: echo "$FIREBASE_SERVICE_ACCOUNT_MYCOGEN_57ADE" > /tmp/firebase-service-account.json
+        env:
+          FIREBASE_SERVICE_ACCOUNT_MYCOGEN_57ADE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MYCOGEN_57ADE }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
