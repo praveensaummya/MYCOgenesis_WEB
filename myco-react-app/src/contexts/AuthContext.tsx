@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import {
   User,
   signInWithEmailAndPassword,
@@ -12,7 +12,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { auth, db, isFirebaseConfigured } from '../lib/firebase';
 
 interface UserProfile {
   uid: string;
@@ -58,9 +58,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [firebaseReady, setFirebaseReady] = useState(false);
+
+  // Firebase is configured, proceed with normal functionality
 
   // Create or update user profile in Firestore
-  const createUserProfile = async (user: User): Promise<UserProfile> => {
+  const createUserProfile = useCallback(async (user: User): Promise<UserProfile> => {
+    if (!firebaseReady || !db) {
+      throw new Error('Firebase not configured');
+    }
     const userRef = doc(db, 'users', user.uid);
     const userSnap = await getDoc(userRef);
 
@@ -97,10 +103,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await setDoc(userRef, updatedProfile, { merge: true });
       return updatedProfile;
     }
-  };
+  }, [firebaseReady]);
 
   // Login with email and password
   const login = async (email: string, password: string): Promise<void> => {
+    if (!firebaseReady || !auth) {
+      throw new Error('Firebase not configured');
+    }
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
@@ -111,6 +120,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Signup with email and password
   const signup = async (email: string, password: string, displayName: string): Promise<void> => {
+    if (!firebaseReady || !auth) {
+      throw new Error('Firebase not configured');
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName });
@@ -122,6 +134,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Login with Google
   const loginWithGoogle = async (): Promise<void> => {
+    if (!firebaseReady || !auth) {
+      throw new Error('Firebase not configured');
+    }
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
@@ -133,6 +148,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Logout
   const logout = async (): Promise<void> => {
+    if (!firebaseReady || !auth) {
+      throw new Error('Firebase not configured');
+    }
     try {
       await signOut(auth);
     } catch (error) {
@@ -144,6 +162,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Update user profile
   const updateUserProfile = async (updates: Partial<UserProfile>): Promise<void> => {
     if (!currentUser) throw new Error('No user logged in');
+    if (!firebaseReady || !db) {
+      throw new Error('Firebase not configured');
+    }
 
     try {
       const userRef = doc(db, 'users', currentUser.uid);
@@ -160,8 +181,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Listen to auth state changes
+  // Check Firebase configuration and set up auth listener
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth || !db) {
+      console.warn('Firebase is not configured. Authentication features will be disabled.');
+      setFirebaseReady(false);
+      setLoading(false);
+      return;
+    }
+
+    setFirebaseReady(true);
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(user);
@@ -179,7 +209,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [createUserProfile]);
 
   const value: AuthContextType = {
     currentUser,

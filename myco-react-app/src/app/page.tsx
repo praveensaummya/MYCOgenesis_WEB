@@ -7,7 +7,7 @@ import { useProductCatalog } from '../hooks/useProductCatalog';
 import useBlogPosts from '../hooks/useBlogPosts';
 import ProductPreview from '../components/ProductPreview';
 import BlogPostPreview from '../components/BlogPostPreview';
-import { db } from '../lib/firebase';
+import { db, isFirebaseConfigured } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const heroImages = [
@@ -48,6 +48,14 @@ export default function HomePage() {
 
     if (!formState.name || !formState.email || !formState.message) {
       alert('Please fill out all fields.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check if Firebase is configured
+    if (!isFirebaseConfigured || !db) {
+      console.warn('Firebase is not configured. Contact form submission is disabled.');
+      setSubmitStatus('error');
       setIsSubmitting(false);
       return;
     }
