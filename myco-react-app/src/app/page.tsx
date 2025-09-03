@@ -83,7 +83,7 @@ export default function HomePage() {
         <div className="bg-black/60 min-h-[60vh] md:min-h-[70vh] flex items-center relative z-10">
           <div className="container mx-auto px-4 md:px-6 py-8 md:py-12 text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 leading-tight hero-title">
-              Cultivating Tomorrow&apos; s Flavors, Today
+              Cultivating Tomorrow&apos;s Flavors, Today
             </h1>
             <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 max-w-3xl mx-auto hero-description">
               Harnessing nature&apos;s intelligence and modern technology for superior quality, sustainable, and diverse mushroom varieties.
@@ -159,7 +159,7 @@ export default function HomePage() {
             <div className="order-2 lg:order-1">
               <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-slate-800">The Art and Science of Fungi</h2>
               <p className="text-slate-600 mb-6 text-lg leading-relaxed">
-                MYCOgenesis was born from a passion for sustainable agriculture and a fascination with the untapped potential of fungi. Our mission is to blend age-old cultivation wisdom with cutting-edge technology to produce mushrooms of unparalleled quality and consistency.
+                MYCOGEN was born from a passion for sustainable agriculture and a fascination with the untapped potential of fungi. Our mission is to blend age-old cultivation wisdom with cutting-edge technology to produce mushrooms of unparalleled quality and consistency.
               </p>
               <p className="text-slate-600 mb-8 leading-relaxed">
                 We believe in a future where food production is both smart and sustainable. By creating the perfect, climate-controlled environment, we not only grow exceptional mushrooms but also contribute to a circular economy, turning agricultural waste into a source of wealth and nutrition.
@@ -210,7 +210,7 @@ export default function HomePage() {
           </div>
           <div className="mt-20 p-6 bg-amber-100/50 border-l-4 border-amber-500 text-amber-800 rounded-md">
             <p className="font-bold">Important Disclaimer:</p>
-            <p>MYCOgenesis is dedicated to cultivating culinary and medicinal mushroom varieties. We do not cultivate, sell, or distribute psilocybin-containing mushrooms, which are classified as a Schedule 1 drug and are subject to legal restrictions.</p>
+            <p>MYCOGEN is dedicated to cultivating culinary and medicinal mushroom varieties. We do not cultivate, sell, or distribute psilocybin-containing mushrooms, which are classified as a Schedule 1 drug and are subject to legal restrictions.</p>
           </div>
         </div>
       </section>

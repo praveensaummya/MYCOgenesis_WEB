@@ -716,10 +716,10 @@ optional_services:
   - firebase_functions: "Server-side processing (future feature)"
   - third_party_apis: "Payment processing, email services (future)"
 ```
-This architecture provides a robust, scalable foundation for the MYCOgenesis mushroom farming business website with a modern React frontend, leveraging Sanity and Firebase for content and backend services.
+This architecture provides a robust, scalable foundation for the MYCOGEN mushroom farming business website with a modern React frontend, leveraging Sanity and Firebase for content and backend services.
 
 ---
 
 **Last Updated**: August 2024  
 **Version**: 1.1 (React Adapted)
-**Maintainer**: MYCOgenesis Development Team
+**Maintainer**: MYCOGEN Development Team

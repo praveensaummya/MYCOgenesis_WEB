@@ -14,7 +14,7 @@ function Header() {
             height={48}
             className="h-10 w-10 sm:h-12 sm:w-12 mr-2 sm:mr-3"
           />
-          <span className="font-bold text-lg sm:text-xl text-slate-700">MYCOGenesis</span>
+          <span className="font-bold text-lg sm:text-xl text-slate-700">MYCOGen</span>
         </div>
 
         {/* Desktop Navigation */}
