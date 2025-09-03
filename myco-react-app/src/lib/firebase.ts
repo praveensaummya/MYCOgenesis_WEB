@@ -14,15 +14,23 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
-// Initialize Firebase
-let app: FirebaseApp;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApp(); // if already initialized
+// Check if Firebase config is available (prevent build-time errors)
+const isFirebaseConfigured = firebaseConfig.apiKey && firebaseConfig.projectId;
+
+// Initialize Firebase only if config is available
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+
+if (isFirebaseConfigured) {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApp();
+  }
+
+  auth = getAuth(app);
+  db = getFirestore(app);
 }
 
-const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
-
-export { app, auth, db };
+export { app, auth, db, isFirebaseConfigured };
