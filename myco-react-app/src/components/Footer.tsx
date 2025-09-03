@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
             </div>
             <p className="text-slate-300 mb-4 max-w-md">
               Cultivating tomorrow&apos;s flavors today through sustainable mushroom farming 
-              with cutting-edge IoT technology and professional content management.
+              with cutting-edge IoT technology.
             </p>
           </div>
 

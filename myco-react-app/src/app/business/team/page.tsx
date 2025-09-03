@@ -25,7 +25,7 @@ export default function TeamPage() {
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/4 text-center">
               <div className="w-32 h-32 rounded-full bg-slate-300 mx-auto mb-4"></div>
-              <h3 className="text-xl font-bold text-slate-800">Alex Chen</h3>
+              <h3 className="text-xl font-bold text-slate-800">Praveen Saummya</h3>
               <p className="text-md text-gray-600">CEO & Co-Founder</p>
             </div>
             <div className="md:w-3/4">
